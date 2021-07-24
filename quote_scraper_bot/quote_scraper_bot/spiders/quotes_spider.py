@@ -1,5 +1,5 @@
 import scrapy
-from ..items import QuotesScraperBotItem
+from ..items import QuoteScraperBotItem
 
 class QuotesSpider(scrapy.Spider):
 
@@ -10,7 +10,7 @@ class QuotesSpider(scrapy.Spider):
         ]
 
     def parse(self, response):
-        items = QuotesScraperBotItem()
+        items = QuoteScraperBotItem()
 
         all_quotes = response.css('div.quote')
         
