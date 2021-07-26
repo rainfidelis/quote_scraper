@@ -1,6 +1,9 @@
 import scrapy
 from scrapy.http import FormRequest
-from scrapy.utils.response import open_in_browser
+# from scrapy.utils.response import open_in_browser 
+# # used to confirm a page loaded successfully directly from the browser
+
+
 from ..items import QuoteScraperBotItem
 
 class QuotesSpider(scrapy.Spider):
@@ -22,7 +25,6 @@ class QuotesSpider(scrapy.Spider):
         
     
     def scraper(self, response):
-        open_in_browser(response)
         items = QuoteScraperBotItem()
 
         all_quotes = response.css('div.quote')
@@ -41,4 +43,4 @@ class QuotesSpider(scrapy.Spider):
         next_page = response.css('.next a::attr(href)').get()
 
         if next_page is not None:
-            yield response.follow(next_page, callback=self.parse)
+            yield response.follow(next_page, callback=self.scraper)
