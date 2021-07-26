@@ -1,4 +1,6 @@
 import scrapy
+from scrapy.http import FormRequest
+from scrapy.utils.response import open_in_browser
 from ..items import QuoteScraperBotItem
 
 class QuotesSpider(scrapy.Spider):
@@ -6,10 +8,21 @@ class QuotesSpider(scrapy.Spider):
     name = 'quotes'
     
     start_urls = [
-        'http://quotes.toscrape.com/'
+        'http://quotes.toscrape.com/login'
         ]
 
     def parse(self, response):
+        
+        token = response.css('form input::attr(value)') .extract()
+        return FormRequest.from_response(response, formdata={
+            'token': token, 
+            'username': 'spacesng@gmail.com',
+            'password': 'rainfast'
+        }, callback=self.scraper)
+        
+    
+    def scraper(self, response):
+        open_in_browser(response)
         items = QuoteScraperBotItem()
 
         all_quotes = response.css('div.quote')
